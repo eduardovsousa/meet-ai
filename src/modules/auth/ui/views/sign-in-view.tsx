@@ -1,11 +1,12 @@
 "use client"
 
+import Link from "next/link";
 import { z } from "zod";
-import { OctagonAlertIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { OctagonAlertIcon } from "lucide-react";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,26 @@ export const SignInView = () => {
         onSuccess: () => {
           setPending(false)
           router.push("/")
+        },
+        onError: ({ error }) => {
+          setPending(false)
+          setError(error.message)
+        }
+      },
+    )
+  }
+
+  const onSocial = (provider: "github" | "google") => {
+    setError(null);
+    setPending(true)
+
+    authClient.signIn.social({
+      provider,
+      callbackURL: "/"
+    },
+      {
+        onSuccess: () => {
+          setPending(false);
         },
         onError: ({ error }) => {
           setPending(false)
@@ -128,20 +149,22 @@ export const SignInView = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <Button
+                    onClick={() => onSocial("google")}
                     disabled={pending}
                     variant="outline"
                     type="button"
                     className="w-full"
                   >
-                    Google
+                    <FaGoogle /> Google
                   </Button>
                   <Button
+                    onClick={() => onSocial("github")}
                     disabled={pending}
                     variant="outline"
                     type="button"
                     className="w-full"
                   >
-                    GitHub
+                    <FaGithub /> GitHub
                   </Button>
                 </div>
                 <div className="text-cneter text-sm">
