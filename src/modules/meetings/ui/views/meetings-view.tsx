@@ -11,7 +11,7 @@ export const MeetingsView = () => {
   const { data } = useSuspenseQuery(trpc.meetings.getMany.queryOptions({}));
 
   return (
-    <div>
+    <div className="max-w-sm">
       {JSON.stringify(data)}
     </div>
   )
