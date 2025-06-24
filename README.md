@@ -10,6 +10,8 @@ npm run dev
 yarn dev
 # or
 pnpm dev
+pnpm dev:webhook
+pnpm dlx inngest-cli@latest dev
 # or
 bun dev
 ```
