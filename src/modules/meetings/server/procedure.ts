@@ -137,7 +137,6 @@ export const meetingsRouter = createTRPCRouter({
         })
         .returning();
 
-      //TODO: Criar chamada de fluxo, inserir usuários de fluxo
       const call = streamVideo.video.call("default", createdMeeting.id);
       await call.create({
         data: {
