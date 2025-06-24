@@ -35,7 +35,7 @@ export const UpcomingState = ({ meetingId, onCancelMeeting, isCancelling }: Prop
         >
           <Link href={`/call/${meetingId}`}>
             <VideoIcon />
-            Cancel meeting
+            Start meeting
           </Link>
         </Button>
       </div>
