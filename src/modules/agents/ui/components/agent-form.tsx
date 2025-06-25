@@ -22,6 +22,7 @@ import { agentsInsertSchema } from "../../schemas";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface AgentFormProps {
   onSuccess?: () => void;
@@ -35,6 +36,7 @@ export const AgentForm = ({
   initialValues,
 }: AgentFormProps) => {
   const trpc = useTRPC();
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const createAgent = useMutation(
@@ -43,15 +45,18 @@ export const AgentForm = ({
         await queryClient.invalidateQueries(
           trpc.agents.getMany.queryOptions({}),
         );
-
-        //TODO: invalidar o free tier
+        await queryClient.invalidateQueries(
+          trpc.premium.getFreeUsage.queryOptions(),
+        );
 
         onSuccess?.();
       },
       onError: (error) => {
         toast.error(error.message);
 
-        //TODO: verificar se o código do erro é "FORBIDDEN", redirecione para "/upgrade"
+        if (error.data?.code === "FORBIDDEN") {
+          router.push("/upgrade");
+        }
       },
     }),
   );
@@ -73,8 +78,6 @@ export const AgentForm = ({
       },
       onError: (error) => {
         toast.error(error.message);
-
-        //TODO: verificar se o código do erro é "FORBIDDEN", redirecione para "/upgrade"
       },
     }),
   );
